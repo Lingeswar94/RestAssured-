@@ -1,0 +1,48 @@
+
+Syntax is
+
+method(){
+given().
+baseuri().
+header().
+boby().
+when().
+methods(put,post,get,delete).
+prettyprint();
+
+}
+
+public class GetallMethods {
+@Test(enabled = false)
+	public void getAll() {
+
+		given().baseUri("http://localhost:3000/").when().get("posts").prettyPrint();
+	}
+@Test(enabled = false)
+public void getpost() {
+	given().baseUri("http://localhost:3000/").header("Content-Type","application/json").body("{\r\n"
+			+ "        \"title\": \"Sachin\",\r\n"
+			+ "        \"author\": \"SRT\",\r\n"
+			+ "        \"id\": 6\r\n"
+			+ "    }").when().post("posts").prettyPrint();
+}
+@Test(enabled = false)
+public void getput() {
+	given().baseUri("http://localhost:3000/").header("Content-Type","application/json").body("{\r\n"
+			+ "    \"title\": \"Rohit\",\r\n"
+			+ "    \"author\": \"MI\",\r\n"
+			+ "    \"id\": 6\r\n"
+			+ "}").when().put("posts/6").prettyPrint();
+}
+@Test(enabled = false)
+public void delete() {
+	given().baseUri("http://localhost:3000/").when().delete("posts/6").prettyPrint();
+}
+@Test
+public void getfile() throws FileNotFoundException {
+	
+	FileInputStream fileInputStream=new FileInputStream("postdata.json");
+	given().baseUri("http://localhost:3000/").header("Content-Type","application/json").body(fileInputStream).when().post("posts").prettyPrint();
+}
+
+}
