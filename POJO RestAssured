@@ -1,0 +1,65 @@
+POJO is a Plain Old Java Object. A POJO categorize not so much by what it has to have to be a POJO but it has to not have. There are 3 Basic things –
+
+It has to not extend to any other class. So, it can’t be a child class of another class.
+It can’t implement any interfaces.
+No Outside annotations.
+
+
+public class Getdata {
+
+	public String firstname;
+	public String lastname;
+	public String email;
+	public List<String> skills;
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	public String getLastname() {
+		return lastname;
+	}
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public List<String> getSkills() {
+		return skills;
+	}
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
+	}
+		
+	}
+
+
+Pojo get serialzation with ObjectMapper
+
+
+public class POJO {
+
+	public static void main(String[] args) throws JsonProcessingException {
+
+		Getdata getdata = new Getdata();
+		getdata.setFirstname("Lingeswar");
+		getdata.setLastname("AK");
+		getdata.setEmail("lingesaw@gmail");
+		getdata.setSkills(Arrays.asList("Java", "Selenium"));
+
+		System.out.println(getdata.getFirstname());
+		System.out.println(getdata.getLastname());
+		System.out.println(getdata.getEmail());
+		System.out.println(getdata.getSkills());
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonform = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(getdata);
+		System.out.println(jsonform);
+	}
+}
