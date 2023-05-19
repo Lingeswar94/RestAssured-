@@ -1,0 +1,76 @@
+The Schema Validation filter can be found under the "Content Filtering" category of filters in the Policy Studio. Drag and drop the filter onto the policy where you want to perform schema validation. The Schema Validation filter dialog has 3 tabs, each of which will be explained in the following sections.
+
+
+
+Schema to Use
+You can select schemas from the global Schema Cache or the Web Services Repository to validate messages. The following tutorials show how to import schemas into these global stores so that they can be selected in the Schema Validation filter:
+
+Global Schema Cache
+Web Service Repository
+The tree hierarchy on the Schema to Use tab contains two top-level nodes: Schema Cache and Web Services Repository. When these nodes are expanded, the contained XML Schemas are displayed in a tree. Each schema has an associated checkbox, which you can use to select the schema to validate the incoming message.
+
+Note:
+If you have a WSDL file that contains an XML Schema, and you want to use this schema to validate the message, you can import the WSDL file into the Web Services Repository. The WSDL Import Wizard includes an option to automatically create a Schema Validation filter and incorporate it into the auto-generated policy. In this case, the top-level schema in the WSDL, which is imported into the Web Services Repository, is selected by default in the filter. In this way, if the schema imports other schemas, they are available to the filter at runtime when validating the message. For more details on how to import WSDL files in this manner, see the Web Services Repository topic.
+
+
+
+public class SchemaValidationJson {
+
+	public SchemaValidationJson() {
+		// TODO Auto-generated constructor stub
+	}
+	
+@Test(enabled = false)
+	public void jsonValidationschema() {
+		
+		File inputjson=new File("src/test/resources/input.json");
+		
+		RestAssured.given().baseUri("http://localhost:3000/").header("Content-Type","application/json").body(inputjson).when().post("profile").
+		
+		
+		then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("SchemaValidation.json"));
+		
+	}
+@Test
+public void JsonSchemamethod() throws FileNotFoundException {
+	File inputjson=new File("src/test/resources/input.json");
+	FileInputStream fileInputStream=new FileInputStream("src/test/resources/SchemaValidation.json");
+	RestAssured.given().baseUri("http://localhost:3000/").header("Content-Type","application/json").body(inputjson).when().post("profile").then().body(JsonSchemaValidator.matchesJsonSchema(fileInputStream));
+}
+}
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+public class JsonSchemausingNetworkNT {
+
+	@Test(enabled = false)
+	public void validationnetworkNT() throws IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonSchemaFactory factory = JsonSchemaFactory.getInstance(VersionFlag.V4);
+		File inputjson = new File("src/test/resources/input.json");
+		FileInputStream fileInputStream = new FileInputStream("src/test/resources/input.json");
+		JsonNode node = mapper.readTree(inputjson);
+		JsonSchema jsonfac = factory.getSchema(fileInputStream);
+
+		Set<ValidationMessage> result = jsonfac.validate(node);
+		if (result.isEmpty()) {
+			System.out.println("No Validation error");
+		} else {
+			for (ValidationMessage validationMessage : result) {
+				System.out.println(validationMessage);
+			}
+		}
+
+	}
+	@Test
+	public void HamcrestValidation() throws IOException {
+		
+		File inputjson = new File("src/test/resources/input.json");
+		File outputjson = new File("src/test/resources/SchemaValidation.json");
+		
+	String input=	FileUtils.readFileToString(inputjson,"UTF-8");
+	MatcherAssert.assertThat(input, JsonSchemaValidator.matchesJsonSchema(outputjson));
+	}
+}
